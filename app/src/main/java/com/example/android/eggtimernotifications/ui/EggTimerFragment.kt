@@ -24,13 +24,11 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
 import com.example.android.eggtimernotifications.R
 import com.example.android.eggtimernotifications.databinding.FragmentEggTimerBinding
-import com.google.firebase.messaging.FirebaseMessaging
 
 class EggTimerFragment : Fragment() {
 
@@ -50,15 +48,51 @@ class EggTimerFragment : Fragment() {
         binding.eggTimerViewModel = viewModel
         binding.lifecycleOwner = this.viewLifecycleOwner
 
-        // TODO: Step 1.7 call create channel
+        createChannel(
+            getString(R.string.egg_notification_channel_id),
+            getString(R.string.egg_notification_channel_name)
+        )
 
         return binding.root
     }
 
-    private fun createChannel(channelId: String, channelName: String) {
-        // TODO: Step 1.6 START create a channel
 
-        // TODO: Step 1.6 END create a channel
+    /**
+     *     Starting with API level 26, all notifications must be assigned to a channel.
+     *     If you tap and hold the app launcher icon, select app info, and tap notifications,
+     *     you will see a list of notification channels associated with the app.
+     *     Right now the list is empty because your app has not created any channels.
+
+    Channels represent a "type" of notification—for example, your egg timer can send a notification
+    when the egg is cooked, and also use another channel to send daily notifications to
+    remind you to have eggs with your breakfast. All notifications in a channel are grouped together,
+    and users can configure notification settings for a whole channel. This allows users to personalize
+    their notification settings based on the kind of notification they are interested in.
+    For example, your users can disable the breakfast notifications, but still choose to see the
+    notifications from the timer
+     */
+    private fun createChannel(channelId: String, channelName: String) {
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val notificationChannel = NotificationChannel(
+                channelId,
+                channelName,
+                NotificationManager.IMPORTANCE_HIGH
+            )
+
+            with(notificationChannel) {
+                enableLights(true)
+                lightColor = Color.RED
+                enableVibration(true)
+                description = "Time for breakfast"
+                //setShowBadge(false) - To Disable Badge on home screen
+            }
+
+            val notificationManager =
+                requireActivity().getSystemService(NotificationManager::class.java)
+            notificationManager?.createNotificationChannel(notificationChannel)
+        }
+
 
     }
 

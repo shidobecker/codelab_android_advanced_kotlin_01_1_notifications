@@ -27,6 +27,22 @@ import android.text.format.DateUtils
 import androidx.core.app.AlarmManagerCompat
 import androidx.core.content.ContextCompat
 
+/**
+ * Notification actions are another customization you can add to your notifications.
+ * Your notifications currently redirect to your app when users click on them.
+ * In addition to this default notification action, you can add action buttons that complete an
+ * app-related task from the notification.
+
+A notification can offer up to three action buttons that allow the user to respond quickly,
+such as snooze a reminder or reply to a text message. These action buttons should not duplicate
+the action performed when the user taps the notification.
+
+To add an action button, pass a PendingIntent to the addAction() function on the builder.
+This is similar to setting up the notification's default tap action by calling setContentIntent(),
+except instead of launching an activity, you can do a variety of other things, for example,
+start a BroadcastReceiver that performs a job in the background so the action does not interrupt
+the app that's already open.
+ */
 class SnoozeReceiver: BroadcastReceiver() {
     private val REQUEST_CODE = 0
 
@@ -47,6 +63,12 @@ class SnoozeReceiver: BroadcastReceiver() {
             triggerTime,
             notifyPendingIntent
         )
+
+        val notificationManager = ContextCompat.getSystemService(
+            context,
+            NotificationManager::class.java
+        ) as NotificationManager
+        notificationManager.cancelAll()
     }
 
 }
