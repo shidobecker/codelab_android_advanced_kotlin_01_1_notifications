@@ -1,4 +1,5 @@
-EggTimer - Final Code 
+# Advanced Android in Kotlin 01.1: Using Android Notifications
+
 ============================================================================
 
 Solution code for Advanced Android with Kotlin Codelab 
